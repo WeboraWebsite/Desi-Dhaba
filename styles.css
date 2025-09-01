@@ -105,7 +105,8 @@ h1, h2, h3 {
     height: 3px;
     background: var(--text-white);
     margin: 3px 0;
-    transition: 0.3s;
+    transition: all 0.3s ease;
+    border-radius: 2px;
 }
 
 /* Hero Section */
@@ -118,6 +119,7 @@ h1, h2, h3 {
     text-align: center;
     position: relative;
     overflow: hidden;
+    padding-top: 80px;
 }
 
 .hero-bg {
@@ -333,6 +335,7 @@ h1, h2, h3 {
 .menu-section {
     padding: 6rem 0;
     background: var(--bg-dark);
+    min-height: 100vh;
 }
 
 .menu-book {
@@ -343,6 +346,7 @@ h1, h2, h3 {
     display: flex;
     align-items: center;
     gap: 2rem;
+    min-height: 600px;
 }
 
 .menu-book-container {
@@ -352,6 +356,7 @@ h1, h2, h3 {
     margin: 0 auto;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     flex: 1;
+    background: linear-gradient(145deg, #f4f1e8, #e8e5dc);
 }
 
 .menu-page {
@@ -365,7 +370,7 @@ h1, h2, h3 {
     box-shadow: 0 15px 40px rgba(0,0,0,0.3);
     cursor: pointer;
     overflow: hidden;
-    opacity: 0;
+    opacity: 1;
     transform: translateX(100%) rotateY(20deg);
     display: block;
     transform-origin: left center;
@@ -1004,6 +1009,7 @@ h1, h2, h3 {
         text-align: center;
         transition: 0.3s;
         padding: 2rem 0;
+        z-index: 1001;
     }
 
     .nav-menu.active {
@@ -1012,6 +1018,7 @@ h1, h2, h3 {
 
     .nav-toggle {
         display: flex;
+        z-index: 1002;
     }
 
     .hero-title {
@@ -1098,10 +1105,35 @@ h1, h2, h3 {
         gap: 1rem;
     }
 
+    .menu-book-container {
+        height: 500px;
+        order: 1;
+        width: calc(100% - 2rem);
+    }
+
     .side-nav-button {
         width: 50px;
         height: 50px;
         font-size: 1.2rem;
+        position: relative;
+        z-index: 1001;
+    }
+
+    .side-nav-button:first-child {
+        order: 0;
+    }
+
+    .side-nav-button:last-child {
+        order: 2;
+    }
+
+    .menu-page-content {
+        padding: 1rem;
+        font-size: 0.8rem;
+    }
+
+    .page-title {
+        font-size: 1.3rem;
     }
 
     .menu-navigation {
@@ -1148,7 +1180,7 @@ h1, h2, h3 {
     }
 
     .menu-book-container {
-        height: 450px;
+        height: 500px;
     }
 
     .menu-page-content {
@@ -1212,14 +1244,30 @@ h1, h2, h3 {
     .menu-book {
         max-width: 100%;
         padding: 0 0.5rem;
-        flex-direction: row;
+        flex-direction: column;
         gap: 0.5rem;
+    }
+
+    .menu-book-container {
+        height: 450px;
+        order: 1;
+        width: calc(100% - 1rem);
     }
 
     .side-nav-button {
         width: 45px;
         height: 45px;
         font-size: 1rem;
+        position: relative;
+        z-index: 1001;
+    }
+
+    .side-nav-button:first-child {
+        order: 0;
+    }
+
+    .side-nav-button:last-child {
+        order: 2;
     }
 
     .menu-page-content {

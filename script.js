@@ -2,26 +2,42 @@
 const navToggle = document.getElementById('nav-toggle');
 const navMenu = document.getElementById('nav-menu');
 
-navToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    
-    // Animate hamburger bars
-    const bars = navToggle.querySelectorAll('.bar');
-    bars.forEach((bar, index) => {
-        bar.style.transform = navMenu.classList.contains('active') 
-            ? `rotate(${index === 1 ? 0 : index === 0 ? 45 : -45}deg) translate(${index === 1 ? 0 : index === 0 ? 5 : -5}px, ${index === 1 ? 0 : index === 0 ? 5 : -5}px)`
-            : 'none';
+if (navToggle && navMenu) {
+    navToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        
+        // Animate hamburger bars
+        const bars = navToggle.querySelectorAll('.bar');
+        bars.forEach((bar, index) => {
+            if (navMenu.classList.contains('active')) {
+                // Cross formation
+                if (index === 0) {
+                    bar.style.transform = 'rotate(45deg) translate(5px, 5px)';
+                } else if (index === 1) {
+                    bar.style.opacity = '0';
+                } else if (index === 2) {
+                    bar.style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                }
+            } else {
+                // Back to hamburger
+                bar.style.transform = 'none';
+                bar.style.opacity = '1';
+            }
+        });
     });
-});
+}
 
 // Close mobile menu when clicking on a link
 document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-        const bars = navToggle.querySelectorAll('.bar');
-        bars.forEach(bar => {
-            bar.style.transform = 'none';
-        });
+        if (navMenu) {
+            navMenu.classList.remove('active');
+            const bars = navToggle.querySelectorAll('.bar');
+            bars.forEach(bar => {
+                bar.style.transform = 'none';
+                bar.style.opacity = '1';
+            });
+        }
     });
 });
 
@@ -343,22 +359,53 @@ document.addEventListener('keydown', function(e) {
 // Touch/swipe support for mobile
 let touchStartX = 0;
 let touchEndX = 0;
+let touchStartY = 0;
+let touchEndY = 0;
+let isSwiping = false;
 
 document.addEventListener('touchstart', function(e) {
-    touchStartX = e.changedTouches[0].screenX;
+    // Only track touches on the menu book area
+    const menuBook = document.querySelector('.menu-book-container');
+    if (menuBook && menuBook.contains(e.target)) {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+        isSwiping = true;
+    }
+});
+
+document.addEventListener('touchmove', function(e) {
+    if (!isSwiping) return;
+    
+    // Prevent default scrolling if horizontal swipe is detected
+    const touchMoveX = e.changedTouches[0].screenX;
+    const touchMoveY = e.changedTouches[0].screenY;
+    const deltaX = Math.abs(touchMoveX - touchStartX);
+    const deltaY = Math.abs(touchMoveY - touchStartY);
+    
+    if (deltaX > deltaY) {
+        e.preventDefault();
+    }
 });
 
 document.addEventListener('touchend', function(e) {
+    if (!isSwiping) return;
+    
     touchEndX = e.changedTouches[0].screenX;
+    touchEndY = e.changedTouches[0].screenY;
     handleSwipe();
+    isSwiping = false;
 });
 
 function handleSwipe() {
     const swipeThreshold = 50;
-    const diff = touchStartX - touchEndX;
+    const verticalThreshold = 100;
     
-    if (Math.abs(diff) > swipeThreshold) {
-        if (diff > 0) {
+    const horizontalDiff = touchStartX - touchEndX;
+    const verticalDiff = Math.abs(touchStartY - touchEndY);
+    
+    // Only process horizontal swipes (ignore vertical scrolling)
+    if (Math.abs(horizontalDiff) > swipeThreshold && verticalDiff < verticalThreshold) {
+        if (horizontalDiff > 0) {
             // Swiped left - next page
             nextPage();
         } else {
